@@ -1,0 +1,38 @@
+Q: What is LeadCraft AI?
+A: LeadCraft AI is an automated lead qualification and sales assistant that uses AI to chat with potential leads, answer their questions, and guide them toward conversion.
+
+Q: How does LeadCraft AI work?
+A: LeadCraft integrates directly with your site as a chat widget. It uses AI to engage visitors, qualify them with smart questions, and deliver lead magnets or booking links based on their responses.
+
+Q: Who is LeadCraft for?
+A: LeadCraft is perfect for small businesses, freelancers, and SaaS companies that want to automate their lead generation and follow-up without hiring a sales team.
+
+Q: What do I get with the free plan?
+A: You’ll get 100 chatbot conversations per month, 1 lead magnet automation, and basic analytics — all without adding a credit card.
+
+Q: What’s included in the paid plans?
+A: Paid plans unlock unlimited chats, multiple lead magnets, CRM integrations, custom branding, and priority support.
+
+Q: Can I use my own lead magnet?
+A: Yes! You can upload your own PDFs, templates, or files to be delivered by the chatbot when a user opts in.
+
+Q: How does LeadCraft qualify leads?
+A: The chatbot uses questions, objection handling, and interaction history to determine if a visitor is a warm lead. You can define your own qualification rules in the dashboard.
+
+Q: How do I install it on my website?
+A: Just copy and paste a small JavaScript snippet (like Google Analytics) and you're done. The chatbot appears automatically.
+
+Q: What’s a lead magnet?
+A: A lead magnet is a free piece of content — like a checklist, template, or ebook — used to attract and convert visitors into leads.
+
+Q: Can I send the lead magnet by email?
+A: Absolutely. When a visitor enters their email, LeadCraft sends the lead magnet file instantly using our built-in email service.
+
+Q: Is my data secure?
+A: Yes, LeadCraft uses encrypted storage and is compliant with GDPR to ensure all lead data is safe.
+
+Q: Can it handle objections?
+A: Yes! LeadCraft is trained to respond to common objections like pricing concerns, skepticism, or indecision — turning cold leads warm.
+
+Q: How can I get started?
+A: Just sign up at leadcraft.ai and follow the 2-minute setup guide. You’ll be up and running instantly.

@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadCraft AI - Your 24/7 Sales Assistant</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        /* Utility classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #333;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: #007bff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature {
+            padding: 30px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .feature h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature p {
+            color: #666;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .demo-image {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3px;
+        }
+
+        .demo-image:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .demo-screenshot {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .demo-screenshot:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .demo-image:hover .demo-overlay {
+            opacity: 1;
+        }
+
+        .play-button {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .demo-overlay p {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .demo-content h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .demo-content p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #5a6c7d;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .demo-features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
+            color: #2c3e50;
+            padding: 12px 16px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feature-icon {
+            font-size: 22px;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .demo-screenshot {
+                height: 300px;
+            }
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 80px 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .testimonial {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .testimonial p {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #007bff;
+            transform: scale(1.05);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .price .period {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .pricing-features li {
+            padding: 8px 0;
+            color: #666;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Eye-catching CTA Banner */
+        .chat-cta-banner {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+            animation: slideInUp 0.5s ease;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .cta-content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cta-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .cta-text {
+            flex: 1;
+        }
+
+        .cta-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .cta-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .cta-button {
+            background: white;
+            color: #ff6b6b;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-icon {
+            width: 60px;
+            height: 60px;
+            background: #007bff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .chat-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+        }
+
+        .message.user .message-content {
+            background: #007bff;
+            color: white;
+        }
+
+        .chat-input-container {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #007bff;
+        }
+
+        .send-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #0056b3;
+        }
+
+        .send-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .send-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 15px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #6c757d;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Lead qualification form */
+        .lead-form {
+            display: none;
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .lead-form.active {
+            display: block;
+        }
+
+        .lead-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .lead-submit {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .lead-submit:hover {
+            background: #218838;
+        }
+
+        /* Success message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .chat-window {
+                width: calc(100vw - 40px);
+                height: 60vh;
+                bottom: 80px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>LeadCraft AI</h1>
+            <p>Your 24/7 Sales Assistant That Qualifies, Captures, and Converts</p>
+            <div class="hero-buttons">
+                <a href="#demo" class="btn btn-primary">Try Demo Chat</a>
+                <a href="#pricing" class="btn btn-secondary">See Plans</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="demo">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-icon">1</div>
+                    <h3>Ask</h3>
+                    <p>Our AI asks intelligent qualifying questions to understand your prospects' needs and pain points.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">2</div>
+                    <h3>Analyze</h3>
+                    <p>Advanced AI analyzes responses to determine buying intent and qualification score.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">3</div>
+                    <h3>Deliver</h3>
+                    <p>Automatically deliver personalized content and lead magnets based on prospect responses.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">4</div>
+                    <h3>Sync to CRM</h3>
+                    <p>Seamlessly sync qualified leads and conversation data to your existing CRM system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Features</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <h3>Smart Lead Flow</h3>
+                    <p>Automated qualification questions that adapt based on prospect responses and industry.</p>
+                </div>
+                <div class="feature">
+                    <h3>CRM Integration</h3>
+                    <p>Connect with HubSpot, Salesforce, Pipedrive, and other popular CRM platforms.</p>
+                </div>
+                <div class="feature">
+                    <h3>Objection Handling</h3>
+                    <p>AI-powered responses to common objections and concerns in real-time.</p>
+                </div>
+                <div class="feature">
+                    <h3>Lead Scoring</h3>
+                    <p>Advanced algorithms score leads based on intent, budget, and timeline signals.</p>
+                </div>
+                <div class="feature">
+                    <h3>Personalization</h3>
+                    <p>Customize AI responses and lead magnets for your specific product and audience.</p>
+                </div>
+                <div class="feature">
+                    <h3>Analytics Dashboard</h3>
+                    <p>Track conversion rates, response times, and lead quality with detailed insights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots">
+        <div class="container">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="demo-container">
+                <div class="demo-image">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="LeadCraft AI Chatbot Interface" class="demo-screenshot">
+                    <div class="demo-overlay">
+                        <div class="play-button">▶</div>
+                        <p>Watch Demo</p>
+                    </div>
+                </div>
+                <div class="demo-content">
+                    <h3>Experience the Power of AI-Powered Lead Generation</h3>
+                    <p>See how our intelligent chatbot qualifies leads, captures information, and delivers personalized content in real-time. Watch the demo to see the complete lead qualification process in action.</p>
+                    <div class="demo-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🤖</span>
+                            <span>Smart Lead Qualification</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Real-time Analytics</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span>Personalized Responses</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <p>"LeadCraft AI increased our qualified leads by 300% in just 30 days. The AI is incredibly smart at identifying real prospects."</p>
+                    <div class="testimonial-author">- Sarah Johnson, Marketing Director</div>
+                </div>
+                <div class="testimonial">
+                    <p>"The integration with our CRM is seamless. Every conversation is automatically logged and scored. Game changer for our sales team."</p>
+                    <div class="testimonial-author">- Mike Chen, Sales Manager</div>
+                </div>
+                <div class="testimonial">
+                    <p>"We've reduced our lead qualification time from hours to minutes. The AI asks exactly the right questions every time."</p>
+                    <div class="testimonial-author">- Lisa Rodriguez, CEO</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Choose Your Plan</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span class="period">/month</span></div>
+                    <ul class="pricing-features">
+                        <li>100 leads per month</li>
+                        <li>Basic AI responses</li>
+                        <li>Email support</li>
+                        <li>Standard integrations</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Get Started Free</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Pro</h3>
+                    <div class="price">$99<span class="period">/month</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited leads</li>
+                        <li>Advanced AI customization</li>
+                        <li>Priority support</li>
+                        <li>All CRM integrations</li>
+                        <li>Advanced analytics</li>
+                        <li>Custom lead magnets</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Start Free Trial</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 LeadCraft AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <!-- Eye-catching CTA banner -->
+        <div class="chat-cta-banner" id="chatCtaBanner">
+            <div class="cta-content">
+                <div class="cta-icon">🎯</div>
+                <div class="cta-text">
+                    <div class="cta-title">Get Your FREE Guide!</div>
+                    <div class="cta-subtitle">"3-Step System to 10x Your Leads"</div>
+                </div>
+                <button class="cta-button" onclick="chatbot.toggleChat()">
+                    Get Guide Now
+                </button>
+            </div>
+            <button class="cta-close" onclick="document.getElementById('chatCtaBanner').style.display='none'">×</button>
+        </div>
+        
+        <div class="chat-icon" id="chatIcon">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+        </div>
+        
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3>LeadCraft AI Assistant</h3>
+                <button class="close-btn" id="closeBtn">&times;</button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hi! I'm your LeadCraft AI assistant. Let me ask you a few quick questions to help you get started with lead generation.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." />
+                    <button class="send-btn" id="sendBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="ai-chatbot-container">
+        <div class="ai-chat-icon" id="aiChatIcon">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+        </div>
+        
+        <div class="ai-chat-window" id="aiChatWindow">
+            <div class="ai-chat-header">
+                <h3>AI Sales Assistant</h3>
+                <button class="ai-close-btn" id="aiCloseBtn">&times;</button>
+            </div>
+            
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="ai-message bot">
+                    <div class="ai-message-content">
+                        Hi! I'm your AI sales assistant. I can help you with lead generation strategies, answer questions about our services, and guide you through the sales process. What would you like to know?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ai-typing-indicator" id="aiTypingIndicator">
+                <div class="ai-typing-dots">
+                    <div class="ai-typing-dot"></div>
+                    <div class="ai-typing-dot"></div>
+                    <div class="ai-typing-dot"></div>
+                </div>
+            </div>
+            
+            <div class="ai-chat-input-container">
+                <div class="ai-chat-input-wrapper">
+                    <input type="text" class="ai-chat-input" id="aiChatInput" placeholder="Ask me anything..." />
+                    <button class="ai-send-btn" id="aiSendBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class LeadCraftChatbot {
+            constructor() {
+                this.isOpen = false;
+                this.isTyping = false;
+                this.sessionId = 'session_' + Date.now();
+                this.leadData = {};
+                this.currentQuestion = 0;
+                this.questions = [
+                    "What's your name?",
+                    "What's your email?",
+                    "What product or service do you offer?",
+                    "What's your biggest pain point?"
+                ];
+                this.questionKeys = ['name', 'email', 'product', 'pain_point'];
+                this.init();
+                this.showCtaBanner();
+            }
+
+            init() {
+                this.chatIcon = document.getElementById('chatIcon');
+                this.chatWindow = document.getElementById('chatWindow');
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatInput = document.getElementById('chatInput');
+                this.sendBtn = document.getElementById('sendBtn');
+                this.closeBtn = document.getElementById('closeBtn');
+                this.typingIndicator = document.getElementById('typingIndicator');
+
+                this.bindEvents();
+                this.startLeadQualification();
+            }
+
+            bindEvents() {
+                this.chatIcon.addEventListener('click', () => this.toggleChat());
+                this.closeBtn.addEventListener('click', () => this.toggleChat());
+                this.sendBtn.addEventListener('click', () => this.sendMessage());
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+            }
+
+            toggleChat() {
+                this.isOpen = !this.isOpen;
+                if (this.isOpen) {
+                    this.chatWindow.classList.add('active');
+                    this.chatInput.focus();
+                } else {
+                    this.chatWindow.classList.remove('active');
+                }
+            }
+
+            startLeadQualification() {
+                setTimeout(() => {
+                    this.askNextQuestion();
+                }, 1000);
+            }
+
+            askNextQuestion() {
+                if (this.currentQuestion < this.questions.length) {
+                    this.showTyping();
+                    setTimeout(() => {
+                        this.hideTyping();
+                        this.addMessage(this.questions[this.currentQuestion], 'bot');
+                    }, 1000);
+                }
+            }
+
+            async sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (!message || this.isTyping) return;
+
+                // Add user message
+                this.addMessage(message, 'user');
+                this.chatInput.value = '';
+
+                // Store the answer
+                if (this.currentQuestion < this.questionKeys.length) {
+                    this.leadData[this.questionKeys[this.currentQuestion]] = message;
+                    this.currentQuestion++;
+                }
+
+                // Check if we have all answers
+                if (this.currentQuestion >= this.questions.length) {
+                    this.showTyping();
+                    setTimeout(() => {
+                        this.hideTyping();
+                        this.completeLeadQualification();
+                    }, 1500);
+                } else {
+                    // Ask next question
+                    setTimeout(() => {
+                        this.askNextQuestion();
+                    }, 1000);
+                }
+            }
+
+            completeLeadQualification() {
+                this.addMessage("Thanks! Here's your free PDF guide: '10 Lead Generation Strategies That Actually Work'", 'bot');
+                
+                // Show download button
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'btn btn-success';
+                downloadBtn.style.margin = '10px 0';
+                downloadBtn.textContent = 'Download Free Guide';
+                downloadBtn.onclick = () => this.downloadGuide();
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+                messageDiv.appendChild(downloadBtn);
+                this.chatMessages.appendChild(messageDiv);
+                
+                this.scrollToBottom();
+                
+                // Submit lead data
+                this.submitLead();
+            }
+
+            downloadGuide() {
+                // Create a temporary link to trigger download
+                const link = document.createElement('a');
+                link.href = '/download-guide';
+                link.download = '10_lead_generation_strategies.pdf';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                this.addMessage('✅ Your guide is downloading! Check your downloads folder.', 'bot');
+            }
+
+            async submitLead() {
+                try {
+                    const response = await fetch('/submit_lead', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            ...this.leadData,
+                            session_id: this.sessionId,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        console.log('Lead captured successfully:', data.lead_id);
+                    } else {
+                        console.error('Failed to capture lead:', data.message);
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            addMessage(content, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}`;
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                messageContent.textContent = content;
+                
+                messageDiv.appendChild(messageContent);
+                this.chatMessages.appendChild(messageDiv);
+                
+                this.scrollToBottom();
+            }
+
+            showTyping() {
+                this.isTyping = true;
+                this.typingIndicator.style.display = 'block';
+                this.scrollToBottom();
+            }
+
+            hideTyping() {
+                this.isTyping = false;
+                this.typingIndicator.style.display = 'none';
+            }
+
+            scrollToBottom() {
+                setTimeout(() => {
+                    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+                }, 100);
+            }
+
+            showCtaBanner() {
+                // Show CTA banner after 3 seconds
+                setTimeout(() => {
+                    const banner = document.getElementById('chatCtaBanner');
+                    if (banner) {
+                        banner.style.display = 'block';
+                    }
+                }, 3000);
+            }
+        }
+
+        // Initialize chatbot
+        const chatbot = new LeadCraftChatbot();
+
+        // AI Chatbot Class
+        class AIChatbot {
+            constructor() {
+                this.isOpen = false;
+                this.isTyping = false;
+                this.sessionId = 'ai_session_' + Date.now();
+                this.init();
+            }
+
+            init() {
+                this.chatIcon = document.getElementById('aiChatIcon');
+                this.chatWindow = document.getElementById('aiChatWindow');
+                this.chatMessages = document.getElementById('aiChatMessages');
+                this.chatInput = document.getElementById('aiChatInput');
+                this.sendBtn = document.getElementById('aiSendBtn');
+                this.closeBtn = document.getElementById('aiCloseBtn');
+                this.typingIndicator = document.getElementById('aiTypingIndicator');
+
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.chatIcon.addEventListener('click', () => this.toggleChat());
+                this.closeBtn.addEventListener('click', () => this.toggleChat());
+                this.sendBtn.addEventListener('click', () => this.sendMessage());
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+            }
+
+            toggleChat() {
+                this.isOpen = !this.isOpen;
+                if (this.isOpen) {
+                    this.chatWindow.classList.add('active');
+                    this.chatInput.focus();
+                } else {
+                    this.chatWindow.classList.remove('active');
+                }
+            }
+
+            async sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (!message || this.isTyping) return;
+
+                // Add user message
+                this.addMessage(message, 'user');
+                this.chatInput.value = '';
+
+                // Show typing indicator
+                this.showTyping();
+
+                try {
+                    const response = await fetch('/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            session_id: this.sessionId
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    this.hideTyping();
+                    
+                    // Add bot response
+                    this.addMessage(data.response, 'bot');
+                    
+                    // Handle guide offer
+                    if (data.show_email_capture) {
+                        this.showEmailCapture();
+                    }
+                    
+
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.hideTyping();
+                    this.addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                }
+            }
+
+
+
+            showEmailCapture() {
+                const emailDiv = document.createElement('div');
+                emailDiv.className = 'ai-message bot';
+                emailDiv.innerHTML = `
+                    <div class="ai-message-content">
+                        <p>I'd love to send you our comprehensive guide on lead generation strategies. What's your email address?</p>
+                        <input type="email" id="emailCapture" placeholder="Enter your email" style="width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+                        <button onclick="aiChatbot.captureEmail()" class="btn btn-primary" style="margin-top: 10px;">Send Guide</button>
+                    </div>
+                `;
+                this.chatMessages.appendChild(emailDiv);
+                this.scrollToBottom();
+            }
+
+            async captureEmail() {
+                const email = document.getElementById('emailCapture').value.trim();
+                if (!email || !email.includes('@')) {
+                    this.addMessage('Please enter a valid email address.', 'bot');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/submit_email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            session_id: this.sessionId
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.addMessage('Perfect! I\'ve sent the guide to your email. You should receive it shortly.', 'bot');
+                        
+                        // Offer call booking after guide
+                        setTimeout(() => {
+                            this.addMessage('Would you like to book a quick 15-minute strategy call to discuss your specific lead generation challenges?', 'bot');
+                        }, 2000);
+                    } else {
+                        this.addMessage('Sorry, there was an error. Please try again.', 'bot');
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.addMessage('Sorry, there was an error. Please try again.', 'bot');
+                }
+            }
+
+            addMessage(content, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `ai-message ${type}`;
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'ai-message-content';
+                messageContent.textContent = content;
+                
+                messageDiv.appendChild(messageContent);
+                this.chatMessages.appendChild(messageDiv);
+                
+                this.scrollToBottom();
+            }
+
+            showTyping() {
+                this.isTyping = true;
+                this.typingIndicator.style.display = 'block';
+                this.scrollToBottom();
+            }
+
+            hideTyping() {
+                this.isTyping = false;
+                this.typingIndicator.style.display = 'none';
+            }
+
+            scrollToBottom() {
+                setTimeout(() => {
+                    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+                }, 100);
+            }
+        }
+
+        // Initialize AI chatbot
+        const aiChatbot = new AIChatbot();
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+flask
+openai
+chromadb
+python-dotenv
+sendgrid

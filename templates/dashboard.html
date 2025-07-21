@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadCraft AI - Client Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #495057;
+            color: white;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #343a40;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .leads-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+            overflow: visible;
+        }
+
+        .section-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            background: white;
+            color: #2c3e50;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .note-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .note-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .note-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .note-modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .note-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .note-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .note-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .note-history {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .note-history-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .note-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .note-date {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .note-text {
+            color: #2c3e50;
+        }
+
+        .notes-preview {
+            max-width: 150px;
+            overflow: hidden;
+        }
+
+        .notes-preview .no-notes {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+
+        .notes-preview .has-notes {
+            color: #27ae60;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .notes-preview .latest-note {
+            color: #2c3e50;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Email Modal Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-group input[readonly] {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            background-color: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        .leads-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .leads-table th {
+            padding: 15px 15px;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leads-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f1f3f4;
+            vertical-align: middle;
+            position: relative;
+            overflow: visible;
+        }
+
+        .leads-table tbody tr {
+            position: relative;
+            overflow: visible;
+        }
+
+        .leads-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .leads-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.85rem;
+        }
+
+        .leads-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #e8f5e8;
+            color: #27ae60;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            position: relative;
+            z-index: 9998;
+        }
+
+        .btn-icon {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            min-width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        .btn-icon:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            z-index: 9998;
+        }
+
+        .dropdown-toggle {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-toggle:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: fixed;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            min-width: 200px;
+            z-index: 9999;
+            margin-top: 4px;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #495057;
+            border-bottom: 1px solid #f1f3f4;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+            color: #212529;
+        }
+
+        .lead-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .lead-detail-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .lead-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .lead-detail-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .lead-detail-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .lead-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .lead-info-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .lead-info-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .lead-info-value {
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        .sales-cycle-section {
+            margin-bottom: 25px;
+        }
+
+        .cycle-stage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cycle-stage.active {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+
+        .stage-recommendation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .stage-recommendation.show {
+            display: block;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-text {
+            color: #495057;
+        }
+
+        .stage-prospecting {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .stage-qualified {
+            background: #e8f5e8;
+            color: #388e3c;
+        }
+
+        .stage-proposal {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .stage-negotiation {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .stage-closed {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .notes-timeline {
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 15px 0 15px 30px;
+            border-left: 2px solid #e0e0e0;
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3498db;
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .timeline-note {
+            color: #2c3e50;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .add-note-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .add-note-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+
+        .add-note-section textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .header-right {
+                justify-content: center;
+            }
+
+            .leads-table {
+                font-size: 0.8rem;
+            }
+
+            .leads-table th,
+            .leads-table td {
+                padding: 8px 6px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Client Dashboard</h1>
+                    <p>Lead Management</p>
+                </div>
+                <div class="header-right">
+                    <a href="/" class="btn btn-secondary">← Back</a>
+                    <a href="/download-leads-csv" class="btn btn-primary">Export CSV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_leads }}</div>
+                <div class="stat-label">Total Leads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ recent_leads }}</div>
+                <div class="stat-label">Today</div>
+            </div>
+        </div>
+
+        <!-- Leads Table -->
+        <div class="leads-section">
+            <div class="section-header">
+                <h2>Leads</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Status:</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All</option>
+                            <option value="new">New</option>
+                            <option value="contacted">Contacted</option>
+                            <option value="qualified">Qualified</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date:</label>
+                        <select class="filter-select" id="dateFilter">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <span class="status-badge" id="filteredCount">{{ leads|length }} Records</span>
+                </div>
+            </div>
+
+            {% if leads %}
+            <table class="leads-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Product</th>
+                        <th>Pain Point</th>
+                        <th>Date</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                    <tr>
+                        <td><strong>{{ lead.name }}</strong></td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.product }}</td>
+                        <td>{{ lead.pain_point }}</td>
+                        <td>{{ lead.timestamp[:10] if lead.timestamp else 'N/A' }}</td>
+                        <td>
+                            <div class="notes-preview" id="notes-preview-{{ loop.index }}">
+                                <span class="no-notes">No notes</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-small btn-icon send-email-btn" data-lead-id="{{ loop.index }}" data-lead-name="{{ lead.name }}" data-lead-email="{{ lead.email }}" data-lead-product="{{ lead.product }}" data-lead-pain="{{ lead.pain_point }}" title="Send Email">✉️</button>
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" data-lead-id="{{ loop.index }}">⋯</button>
+                                    <div class="dropdown-menu" id="dropdown-{{ loop.index }}">
+                                        <div class="dropdown-item view-record-btn" data-lead-id="{{ loop.index }}" data-lead-name="{{ lead.name }}" data-lead-email="{{ lead.email }}" data-lead-product="{{ lead.product }}" data-lead-pain="{{ lead.pain_point }}" data-lead-timestamp="{{ lead.timestamp }}">View Details</div>
+                                        <div class="dropdown-item update-stage-btn" data-lead-id="{{ loop.index }}">Update Sales Stage</div>
+                                        <div class="dropdown-item add-note-btn" data-lead-id="{{ loop.index }}" data-lead-name="{{ lead.name }}">Add Note</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No Leads Yet</h3>
+                <p>Leads will appear here once captured.</p>
+                <a href="/" class="btn btn-primary">View Site</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Notes Modal -->
+    <div class="note-modal" id="noteModal">
+        <div class="note-modal-content">
+            <div class="note-modal-header">
+                <div class="note-modal-title">Add Note - <span id="leadName"></span></div>
+                <button class="note-modal-close" onclick="closeNoteModal()">&times;</button>
+            </div>
+            
+            <textarea class="note-textarea" id="noteText" placeholder="Add your note here..."></textarea>
+            
+            <div class="note-actions">
+                <button class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNote()">Save Note</button>
+            </div>
+            
+            <div class="note-history" id="noteHistory">
+                <div class="note-history-title">Note History</div>
+                <div id="noteHistoryContent">
+                    <!-- Notes will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lead Detail Modal -->
+    <div class="lead-detail-modal" id="leadDetailModal">
+        <div class="lead-detail-content">
+            <div class="lead-detail-header">
+                <div class="lead-detail-title">Lead Details - <span id="detailLeadName"></span></div>
+                <button class="lead-detail-close" onclick="closeLeadDetail()">&times;</button>
+            </div>
+            
+            <div class="lead-info-grid">
+                <div class="lead-info-section">
+                    <div class="lead-info-title">Contact Information</div>
+                    <div class="lead-info-value">
+                        <strong>Name:</strong> <span id="detailName"></span><br>
+                        <strong>Email:</strong> <span id="detailEmail"></span><br>
+                        <strong>Date Added:</strong> <span id="detailDate"></span>
+                    </div>
+                </div>
+                <div class="lead-info-section">
+                    <div class="lead-info-title">Business Information</div>
+                    <div class="lead-info-value">
+                        <strong>Product/Service:</strong> <span id="detailProduct"></span><br>
+                        <strong>Pain Point:</strong> <span id="detailPain"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sales-cycle-section">
+                <div class="lead-info-title">Sales Cycle Stage</div>
+                <div id="salesStages">
+                    <span class="cycle-stage stage-prospecting" onclick="updateSalesStageInModal('Prospecting')">Prospecting</span>
+                    <span class="cycle-stage stage-qualified" onclick="updateSalesStageInModal('Qualified')">Qualified</span>
+                    <span class="cycle-stage stage-proposal" onclick="updateSalesStageInModal('Proposal')">Proposal</span>
+                    <span class="cycle-stage stage-negotiation" onclick="updateSalesStageInModal('Negotiation')">Negotiation</span>
+                    <span class="cycle-stage stage-closed" onclick="updateSalesStageInModal('Closed')">Closed</span>
+                </div>
+                <div id="stageRecommendation" class="stage-recommendation">
+                    <div class="recommendation-title">Next Steps Recommendation</div>
+                    <div class="recommendation-text" id="recommendationText">
+                        <!-- Recommendation text will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="notes-timeline">
+                <div class="lead-info-title">Notes Timeline</div>
+                <div id="notesTimeline">
+                    <!-- Notes timeline will be loaded here -->
+                </div>
+                <div class="add-note-section">
+                    <div class="lead-info-title">Add Note</div>
+                    <textarea id="detailNoteText" placeholder="Enter your note here..." rows="3"></textarea>
+                    <button class="btn btn-small btn-primary" onclick="saveDetailNote()">Save Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div class="modal" id="emailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Send Email</h2>
+                <span class="close" onclick="closeModal('emailModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="emailForm">
+                    <div class="form-group">
+                        <label for="emailTo">To:</label>
+                        <input type="email" id="emailTo" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailSubject">Subject:</label>
+                        <input type="text" id="emailSubject" placeholder="Enter email subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailBody">Message:</label>
+                        <textarea id="emailBody" rows="8" placeholder="Enter your message here..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailTemplate">Quick Templates:</label>
+                        <select id="emailTemplate" onchange="loadEmailTemplate()">
+                            <option value="">Select a template...</option>
+                            <option value="welcome">Welcome Email</option>
+                            <option value="followup">Follow-up Email</option>
+                            <option value="proposal">Proposal Email</option>
+                            <option value="custom">Custom Message</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('emailModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Email</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLeadId = null;
+        let currentLeadName = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionButtons = document.querySelectorAll('.action-buttons button');
+            const statusFilter = document.getElementById('statusFilter');
+            const dateFilter = document.getElementById('dateFilter');
+            const filteredCount = document.getElementById('filteredCount');
+            const tableRows = document.querySelectorAll('.leads-table tbody tr');
+            
+            // Add interactivity to action buttons
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.trim();
+                    const row = this.closest('tr');
+                    const name = row.querySelector('td:first-child strong').textContent;
+                    const email = row.querySelector('td:nth-child(2)').textContent;
+                    
+                    // Handle contact and email actions
+                    if (action === 'Contact' || action === 'Email') {
+                        // Update button state
+                        this.style.background = '#28a745';
+                        this.textContent = '✓ Done';
+                        this.disabled = true;
+                        
+                        // Show success message
+                        alert(`${action} action initiated for ${name} (${email})`);
+                    }
+                });
+            });
+
+            // Add dropdown functionality using event delegation
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-toggle')) {
+                    e.stopPropagation();
+                    const leadId = e.target.dataset.leadId;
+                    toggleDropdown(leadId);
+                }
+            });
+
+            // Add dropdown item functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('view-record-btn') || e.target.classList.contains('view-details-btn')) {
+                    e.preventDefault();
+                    const leadId = e.target.dataset.leadId;
+                    const leadName = e.target.dataset.leadName;
+                    const leadEmail = e.target.dataset.leadEmail;
+                    const leadProduct = e.target.dataset.leadProduct;
+                    const leadPain = e.target.dataset.leadPain;
+                    const leadTimestamp = e.target.dataset.leadTimestamp;
+                    viewLeadDetail(leadId, leadName, leadEmail, leadProduct, leadPain, leadTimestamp);
+                } else if (e.target.classList.contains('update-stage-btn')) {
+                    e.preventDefault();
+                    const leadId = e.target.dataset.leadId;
+                    updateSalesStage(leadId);
+                } else if (e.target.classList.contains('add-note-btn')) {
+                    e.preventDefault();
+                    const leadId = e.target.dataset.leadId;
+                    const leadName = e.target.dataset.leadName;
+                    openNoteModal(leadName, leadId);
+                } else if (e.target.classList.contains('send-email-btn')) {
+                    e.preventDefault();
+                    const leadId = e.target.dataset.leadId;
+                    const leadName = e.target.dataset.leadName;
+                    const leadEmail = e.target.dataset.leadEmail;
+                    const leadProduct = e.target.dataset.leadProduct;
+                    const leadPain = e.target.dataset.leadPain;
+                    openEmailModal(leadName, leadEmail, leadProduct, leadPain);
+                }
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    closeAllDropdowns();
+                }
+            });
+
+            // Filtering functionality
+            function filterLeads() {
+                const statusValue = statusFilter.value;
+                const dateValue = dateFilter.value;
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                
+                let visibleCount = 0;
+                
+                tableRows.forEach(row => {
+                    let showRow = true;
+                    
+                    // Status filtering (currently all leads are "new" status)
+                    if (statusValue && statusValue !== 'new') {
+                        showRow = false; // Since all leads are new, hide if filtering for other statuses
+                    }
+                    
+                    // Date filtering
+                    if (dateValue && showRow) {
+                        const dateCell = row.querySelector('td:nth-child(5)').textContent;
+                        const leadDate = new Date(dateCell);
+                        
+                        switch(dateValue) {
+                            case 'today':
+                                showRow = dateCell === todayStr;
+                                break;
+                            case 'week':
+                                const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                                showRow = leadDate >= weekAgo;
+                                break;
+                            case 'month':
+                                const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                                showRow = leadDate >= monthAgo;
+                                break;
+                        }
+                    }
+                    
+                    // Show/hide row
+                    row.style.display = showRow ? '' : 'none';
+                    if (showRow) visibleCount++;
+                });
+                
+                // Update count
+                filteredCount.textContent = `${visibleCount} Records`;
+            }
+            
+            // Add event listeners for filters
+            statusFilter.addEventListener('change', filterLeads);
+            dateFilter.addEventListener('change', filterLeads);
+            
+            // Load notes previews for all leads
+            loadAllNotesPreviews();
+        });
+
+        function loadAllNotesPreviews() {
+            const tableRows = document.querySelectorAll('.leads-table tbody tr');
+            tableRows.forEach((row, index) => {
+                const leadId = index + 1;
+                const notesKey = `lead_notes_${leadId}`;
+                const notes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+                
+                if (notes.length > 0) {
+                    updateNotesPreview(leadId, notes[0]);
+                }
+            });
+        }
+
+        // Note modal functions
+        function openNoteModal(leadName, leadId) {
+            currentLeadId = leadId;
+            currentLeadName = leadName;
+            
+            document.getElementById('leadName').textContent = leadName;
+            document.getElementById('noteText').value = '';
+            document.getElementById('noteModal').style.display = 'block';
+            
+            // Load existing notes
+            loadNotes(leadId);
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').style.display = 'none';
+            currentLeadId = null;
+            currentLeadName = null;
+        }
+
+        function saveNote() {
+            const noteText = document.getElementById('noteText').value.trim();
+            if (!noteText) {
+                alert('Please enter a note before saving.');
+                return;
+            }
+
+            // Get existing notes from localStorage
+            const notesKey = `lead_notes_${currentLeadId}`;
+            const existingNotes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+            
+            // Add new note
+            const newNote = {
+                text: noteText,
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+            
+            existingNotes.unshift(newNote); // Add to beginning
+            localStorage.setItem(notesKey, JSON.stringify(existingNotes));
+            
+            // Clear textarea and reload notes
+            document.getElementById('noteText').value = '';
+            loadNotes(currentLeadId);
+            
+            alert('Note saved successfully!');
+        }
+
+        function loadNotes(leadId) {
+            const notesKey = `lead_notes_${leadId}`;
+            const notes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+            const historyContent = document.getElementById('noteHistoryContent');
+            
+            if (notes.length === 0) {
+                historyContent.innerHTML = '<div class="note-item">No notes yet.</div>';
+                updateNotesPreview(leadId, null);
+                return;
+            }
+            
+            historyContent.innerHTML = notes.map(note => `
+                <div class="note-item">
+                    <div class="note-date">${new Date(note.date).toLocaleString()}</div>
+                    <div class="note-text">${note.text}</div>
+                </div>
+            `).join('');
+            
+            // Update preview with latest note
+            updateNotesPreview(leadId, notes[0]);
+        }
+
+        function updateNotesPreview(leadId, latestNote) {
+            const previewElement = document.getElementById(`notes-preview-${leadId}`);
+            if (!previewElement) return;
+            
+            if (!latestNote) {
+                previewElement.innerHTML = '<span class="no-notes">No notes</span>';
+                return;
+            }
+            
+            const noteText = latestNote.text.length > 50 ? 
+                latestNote.text.substring(0, 50) + '...' : 
+                latestNote.text;
+            
+            previewElement.innerHTML = `
+                <div class="has-notes">✓ Has notes</div>
+                <div class="latest-note">${noteText}</div>
+            `;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('noteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeNoteModal();
+            }
+        });
+
+        // Email modal functions
+        function openEmailModal(leadName, leadEmail, leadProduct, leadPain) {
+            document.getElementById('emailTo').value = leadEmail;
+            document.getElementById('emailSubject').value = '';
+            document.getElementById('emailBody').value = '';
+            document.getElementById('emailTemplate').value = '';
+            document.getElementById('emailModal').style.display = 'block';
+            
+            // Store lead info for template use
+            window.currentEmailLead = {
+                name: leadName,
+                email: leadEmail,
+                product: leadProduct,
+                pain: leadPain
+            };
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function loadEmailTemplate() {
+            const template = document.getElementById('emailTemplate').value;
+            const subjectField = document.getElementById('emailSubject');
+            const bodyField = document.getElementById('emailBody');
+            
+            // Get lead info from stored data
+            const leadInfo = window.currentEmailLead || {};
+            const leadName = leadInfo.name || 'there';
+            const leadProduct = leadInfo.product || 'our services';
+            const leadPain = leadInfo.pain || 'your business needs';
+            
+            switch(template) {
+                case 'welcome':
+                    subjectField.value = 'Welcome! Let\'s discuss your business needs';
+                    bodyField.value = `Hi ${leadName},
+
+Thank you for your interest in our services. I noticed you're looking for ${leadProduct} and dealing with ${leadPain}.
+
+I'd love to schedule a quick call to discuss how we can help you achieve your goals.
+
+Best regards,
+Your Sales Team`;
+                    break;
+                case 'followup':
+                    subjectField.value = 'Following up on our conversation';
+                    bodyField.value = `Hi ${leadName},
+
+I wanted to follow up on our previous discussion about ${leadProduct}. 
+
+How are things progressing with ${leadPain}? I'd be happy to share some insights that might help.
+
+Best regards,
+Your Sales Team`;
+                    break;
+                case 'proposal':
+                    subjectField.value = 'Proposal for your business needs';
+                    bodyField.value = `Hi ${leadName},
+
+Based on our discussion about ${leadProduct} and your challenge with ${leadPain}, I've prepared a customized proposal for you.
+
+I'm confident we can help you achieve your goals. Would you be available for a brief call to discuss the details?
+
+Best regards,
+Your Sales Team`;
+                    break;
+                case 'custom':
+                    subjectField.value = '';
+                    bodyField.value = '';
+                    break;
+                default:
+                    subjectField.value = '';
+                    bodyField.value = '';
+            }
+        }
+
+        // Handle email form submission
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const to = document.getElementById('emailTo').value;
+            const subject = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            
+            if (!subject || !body) {
+                alert('Please fill in both subject and message.');
+                return;
+            }
+            
+            // Here you would typically send the email via your backend
+            // For now, we'll just show a success message
+            alert(`Email prepared for ${to}\nSubject: ${subject}\n\nThis would be sent via your email service.`);
+            
+            closeModal('emailModal');
+        });
+
+        // Close email modal when clicking outside
+        document.getElementById('emailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal('emailModal');
+            }
+        });
+
+        // Dropdown functions
+        function toggleDropdown(leadId) {
+            const dropdown = document.getElementById(`dropdown-${leadId}`);
+            const toggleButton = document.querySelector(`[data-lead-id="${leadId}"].dropdown-toggle`);
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            
+            // Close all other dropdowns
+            allDropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            } else {
+                // Position the dropdown relative to the toggle button
+                const buttonRect = toggleButton.getBoundingClientRect();
+                dropdown.style.left = (buttonRect.right - 200) + 'px';
+                dropdown.style.top = (buttonRect.bottom + 4) + 'px';
+                dropdown.classList.add('show');
+            }
+        }
+
+        function closeAllDropdowns() {
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            allDropdowns.forEach(d => d.classList.remove('show'));
+        }
+
+        // Lead detail functions
+        function viewLeadDetail(leadId, leadName, leadEmail, leadProduct, leadPain, leadTimestamp) {
+            // Populate modal with lead data
+            document.getElementById('detailLeadName').textContent = leadName;
+            document.getElementById('detailName').textContent = leadName;
+            document.getElementById('detailEmail').textContent = leadEmail;
+            document.getElementById('detailProduct').textContent = leadProduct;
+            document.getElementById('detailPain').textContent = leadPain;
+            document.getElementById('detailDate').textContent = leadTimestamp ? leadTimestamp.substring(0, 10) : 'N/A';
+            
+            // Store current lead info for notes
+            currentLeadId = leadId;
+            currentLeadName = leadName;
+            
+            // Load notes timeline
+            loadNotesTimeline(leadId);
+            
+            // Load current sales stage
+            const currentStage = localStorage.getItem(`lead_stage_${leadId}`) || 'Prospecting';
+            updateStageDisplay(currentStage);
+            showStageRecommendation(currentStage);
+            
+            // Clear note textarea
+            document.getElementById('detailNoteText').value = '';
+            
+            // Show modal
+            document.getElementById('leadDetailModal').style.display = 'block';
+            closeAllDropdowns();
+        }
+
+        function closeLeadDetail() {
+            document.getElementById('leadDetailModal').style.display = 'none';
+        }
+
+        function loadNotesTimeline(leadId) {
+            const notesKey = `lead_notes_${leadId}`;
+            const notes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+            const timelineElement = document.getElementById('notesTimeline');
+            
+            if (notes.length === 0) {
+                timelineElement.innerHTML = '<div class="timeline-item"><div class="timeline-note">No notes yet.</div></div>';
+                return;
+            }
+            
+            timelineElement.innerHTML = notes.map(note => `
+                <div class="timeline-item">
+                    <div class="timeline-date">${new Date(note.date).toLocaleString()}</div>
+                    <div class="timeline-note">${note.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateSalesStage(leadId) {
+            const stages = ['Prospecting', 'Qualified', 'Proposal', 'Negotiation', 'Closed'];
+            const currentStage = localStorage.getItem(`lead_stage_${leadId}`) || 'Prospecting';
+            
+            const newStage = prompt(`Current stage: ${currentStage}\n\nSelect new stage:\n${stages.join('\n')}`, currentStage);
+            
+            if (newStage && stages.includes(newStage)) {
+                localStorage.setItem(`lead_stage_${leadId}`, newStage);
+                alert(`Sales stage updated to: ${newStage}`);
+                closeAllDropdowns();
+            }
+        }
+
+        function updateSalesStageInModal(stage) {
+            localStorage.setItem(`lead_stage_${currentLeadId}`, stage);
+            updateStageDisplay(stage);
+            showStageRecommendation(stage);
+        }
+
+        function updateStageDisplay(stage) {
+            // Remove active class from all stages
+            document.querySelectorAll('.cycle-stage').forEach(s => s.classList.remove('active'));
+            
+            // Add active class to current stage
+            const stageElement = document.querySelector(`.stage-${stage.toLowerCase()}`);
+            if (stageElement) {
+                stageElement.classList.add('active');
+            }
+        }
+
+        function showStageRecommendation(stage) {
+            const recommendationDiv = document.getElementById('stageRecommendation');
+            const recommendationText = document.getElementById('recommendationText');
+            
+            const recommendations = {
+                'Prospecting': 'Focus on lead qualification. Research the prospect\'s business, understand their pain points, and determine if they have budget and authority to make purchasing decisions. Schedule an initial discovery call.',
+                'Qualified': 'Conduct a detailed needs assessment. Ask probing questions about their current situation, challenges, and goals. Present your solution and demonstrate clear value proposition.',
+                'Proposal': 'Create a compelling proposal that addresses their specific needs. Include pricing, timeline, and ROI projections. Follow up within 24-48 hours to discuss the proposal.',
+                'Negotiation': 'Address any objections or concerns. Be prepared to discuss pricing, terms, and implementation details. Focus on value over price and be ready to close the deal.',
+                'Closed': 'Congratulations! The deal is closed. Focus on onboarding, implementation, and building a long-term relationship. Ask for referrals and testimonials.'
+            };
+            
+            recommendationText.textContent = recommendations[stage] || 'Select a stage to see recommendations.';
+            recommendationDiv.classList.add('show');
+        }
+
+        function saveDetailNote() {
+            const noteText = document.getElementById('detailNoteText').value.trim();
+            if (!noteText) {
+                alert('Please enter a note before saving.');
+                return;
+            }
+
+            // Get existing notes from localStorage
+            const notesKey = `lead_notes_${currentLeadId}`;
+            const existingNotes = JSON.parse(localStorage.getItem(notesKey) || '[]');
+            
+            // Add new note
+            const newNote = {
+                text: noteText,
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+            
+            existingNotes.unshift(newNote); // Add to beginning
+            localStorage.setItem(notesKey, JSON.stringify(existingNotes));
+            
+            // Clear textarea and reload notes
+            document.getElementById('detailNoteText').value = '';
+            loadNotesTimeline(currentLeadId);
+            
+            // Update notes preview in the table
+            updateNotesPreview(currentLeadId, newNote);
+            
+            alert('Note saved successfully!');
+        }
+
+        // Close lead detail modal when clicking outside
+        document.getElementById('leadDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLeadDetail();
+            }
+        });
+    </script>
+</body>
+</html> 
