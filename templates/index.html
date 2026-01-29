@@ -183,11 +183,11 @@
             <div class="cta-content">
                 <div class="cta-icon">🎯</div>
                 <div class="cta-text">
-                    <div class="cta-title">Get Your FREE Guide!</div>
-                    <div class="cta-subtitle">"3-Step System to 10x Your Leads"</div>
+                    <div class="cta-title">Book a Call</div>
+                    <div class="cta-subtitle">Talk through your lead-gen goals</div>
                 </div>
                 <button class="cta-button" onclick="chatbot.toggleChat()">
-                    Get Guide Now
+                    Get Started
                 </button>
             </div>
             <button class="cta-close" onclick="document.getElementById('chatCtaBanner').style.display='none'">×</button>
@@ -245,10 +245,11 @@
                 this.questions = [
                     "What's your name?",
                     "What's your email?",
+                    "What's your phone number?",
                     "What product or service do you offer?",
                     "What's your biggest pain point?"
                 ];
-                this.questionKeys = ['name', 'email', 'product', 'pain_point'];
+                this.questionKeys = ['name', 'email', 'phone', 'product', 'pain_point'];
                 this.init();
                 this.showCtaBanner();
             }
@@ -309,9 +310,26 @@
                 this.addMessage(message, 'user');
                 this.chatInput.value = '';
 
+                // Validate key fields immediately so we don't advance the flow with bad data.
+                const key = this.questionKeys[this.currentQuestion];
+                if (key === 'email') {
+                    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRe.test(message)) {
+                        this.addMessage('Please enter a valid email address.', 'bot');
+                        return; // stay on the email question
+                    }
+                } else if (key === 'phone') {
+                    // Lightweight client-side check; server does strict validation + E.164 normalization.
+                    const digits = message.replace(/\D/g, '');
+                    if (digits.length < 10 || digits === '0000000000' || digits === '1234567890' || /^(\d)\1+$/.test(digits)) {
+                        this.addMessage('Please enter a valid U.S. phone number (10 digits).', 'bot');
+                        return; // stay on the phone question
+                    }
+                }
+
                 // Store the answer
                 if (this.currentQuestion < this.questionKeys.length) {
-                    this.leadData[this.questionKeys[this.currentQuestion]] = message;
+                    this.leadData[key] = message;
                     this.currentQuestion++;
                 }
 
@@ -331,23 +349,7 @@
             }
 
             completeLeadQualification() {
-                this.addMessage("Thanks! Here's your free PDF guide: '10 Lead Generation Strategies That Actually Work'", 'bot');
-                
-                // Show download button
-                const downloadBtn = document.createElement('button');
-                downloadBtn.className = 'btn btn-success';
-                downloadBtn.style.margin = '10px 0';
-                downloadBtn.textContent = 'Download Free Guide';
-                downloadBtn.onclick = () => this.downloadGuide();
-                
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message bot';
-                messageDiv.appendChild(downloadBtn);
-                this.chatMessages.appendChild(messageDiv);
-                
-                this.scrollToBottom();
-                
-                // Submit lead data
+                this.addMessage("Thanks — verifying your details now.", 'bot');
                 this.submitLead();
             }
 
@@ -381,11 +383,52 @@
 
                     const data = await response.json();
                     
-                    if (data.success) {
-                        console.log('Lead captured successfully:', data.lead_id);
-                    } else {
-                        console.error('Failed to capture lead:', data.message);
+                    const verification = data ? data.verification : null;
+                    const qualification = data ? data.qualification : null;
+                    const nextAction = data ? data.next_action : null;
+                    const followUpDays = data ? data.follow_up_window_days : null;
+
+                    if (!verification) {
+                        this.addMessage("I couldn't verify your details yet. Please re-enter your name, email, and phone number.", 'bot');
+                        this.currentQuestion = 0;
+                        return;
                     }
+
+                    if (verification.verification_status !== 'pass') {
+                        const followups = Array.isArray(verification.required_followups) ? verification.required_followups : [];
+                        if (followups.length) {
+                            followups.slice(0, 3).forEach((q) => this.addMessage(q, 'bot'));
+                        } else {
+                            this.addMessage("Please confirm your name and provide a valid email or U.S. phone number.", 'bot');
+                        }
+                        // Restart from phone/email depending on what failed.
+                        const flags = Array.isArray(verification.risk_flags) ? verification.risk_flags : [];
+                        const missing = Array.isArray(verification.missing_fields) ? verification.missing_fields : [];
+                        if (flags.includes('invalid_phone') || missing.includes('phone')) this.currentQuestion = this.questionKeys.indexOf('phone');
+                        else if (flags.includes('invalid_email') || missing.includes('email')) this.currentQuestion = this.questionKeys.indexOf('email');
+                        else this.currentQuestion = 0;
+                        return;
+                    }
+
+                    if (!qualification) {
+                        this.addMessage("Thanks — you're verified. Would you like to book a call, or should we follow up later?", 'bot');
+                        return;
+                    }
+
+                    if (nextAction === 'book_call') {
+                        const link = data.booking_link || '';
+                        if (link) this.addMessage(`Here’s the link to book a call: ${link}`, 'bot');
+                        else this.addMessage("What times work for a quick call this week (and what’s your time zone)?", 'bot');
+                        return;
+                    }
+
+                    if (nextAction === 'follow_up') {
+                        const days = (followUpDays === 7 || followUpDays === 14 || followUpDays === 30) ? followUpDays : 14;
+                        this.addMessage(`No problem. Is it okay if I follow up in ${days} days? If yes, should I reach you by email or phone?`, 'bot');
+                        return;
+                    }
+
+                    this.addMessage("Thanks — it doesn’t sound like a fit right now. If anything changes, feel free to reach back out.", 'bot');
 
                 } catch (error) {
                     console.error('Error:', error);

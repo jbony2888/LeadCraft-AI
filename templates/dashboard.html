@@ -63,13 +63,25 @@
             </div>
 
             {% if leads %}
+            <div class="table-scroll">
             <table class="leads-table">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Phone</th>
                         <th>Product</th>
                         <th>Pain Point</th>
+                        <th>Verification Status</th>
+                        <th>Verification Score</th>
+                        <th>Qualification Status</th>
+                        <th>Intent Score</th>
+                        <th>Intent Bucket</th>
+                        <th>Combined Score</th>
+                        <th>Next Action</th>
+                        <th>Follow-Up Days</th>
+                        <th>Preferred Contact</th>
+                        <th>Route Reason</th>
                         <th>Date</th>
                         <th>Notes</th>
                         <th>Actions</th>
@@ -79,9 +91,42 @@
                     {% for lead in leads %}
                     <tr>
                         <td><strong>{{ lead.name }}</strong></td>
-                        <td>{{ lead.email }}</td>
-                        <td>{{ lead.product }}</td>
-                        <td>{{ lead.pain_point }}</td>
+                        <td class="mono" title="{{ lead.email }}">{{ lead.email }}</td>
+                        <td class="mono" title="{{ lead.phone or lead.phone_e164 or 'N/A' }}">{{ lead.phone or lead.phone_e164 or 'N/A' }}</td>
+                        <td class="cell-wrap" title="{{ lead.product }}">{{ lead.product }}</td>
+                        <td><span class="cell-pain" title="{{ lead.pain_point }}">{{ lead.pain_point }}</span></td>
+                        <td>
+                            {% set vs = (lead.verification_status or '')|lower %}
+                            {% if vs == 'pass' %}
+                                <span class="status-badge" style="background:#d4edda;color:#155724;">PASS</span>
+                            {% elif vs == 'needs_more_info' %}
+                                <span class="status-badge" style="background:#fff3cd;color:#856404;">NEEDS INFO</span>
+                            {% elif vs == 'fail' %}
+                                <span class="status-badge" style="background:#f8d7da;color:#721c24;">FAIL</span>
+                            {% else %}
+                                <span class="status-badge">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ lead.verification_score or 'N/A' }}</td>
+                        <td>
+                            {% set qs = (lead.qualification_status or '')|lower %}
+                            {% if qs == 'qualified' %}
+                                <span class="status-badge" style="background:#d4edda;color:#155724;">QUALIFIED</span>
+                            {% elif qs == 'follow_up_later' %}
+                                <span class="status-badge" style="background:#fff3cd;color:#856404;">FOLLOW UP</span>
+                            {% elif qs == 'unqualified' %}
+                                <span class="status-badge" style="background:#f8d7da;color:#721c24;">UNQUALIFIED</span>
+                            {% else %}
+                                <span class="status-badge">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ lead.intent_score or 'N/A' }}</td>
+                        <td>{{ lead.intent_bucket or 'N/A' }}</td>
+                        <td>{{ lead.combined_score or 'N/A' }}</td>
+                        <td>{{ lead.next_action or 'N/A' }}</td>
+                        <td>{{ lead.follow_up_window_days or 'N/A' }}</td>
+                        <td>{{ lead.preferred_contact_method or 'N/A' }}</td>
+                        <td>{{ lead.route_reason or 'N/A' }}</td>
                         <td>{{ lead.timestamp[:10] if lead.timestamp else 'N/A' }}</td>
                         <td>
                             <div class="notes-preview" id="notes-preview-{{ loop.index }}">
@@ -94,7 +139,7 @@
                                 <div class="dropdown">
                                     <button class="dropdown-toggle" data-lead-id="{{ loop.index }}">⋯</button>
                                     <div class="dropdown-menu" id="dropdown-{{ loop.index }}">
-                                        <div class="dropdown-item view-record-btn" data-lead-id="{{ loop.index }}" data-lead-name="{{ lead.name }}" data-lead-email="{{ lead.email }}" data-lead-product="{{ lead.product }}" data-lead-pain="{{ lead.pain_point }}" data-lead-timestamp="{{ lead.timestamp }}">View Details</div>
+                                        <div class="dropdown-item view-record-btn" data-lead-id="{{ loop.index }}" data-lead-name="{{ lead.name }}" data-lead-email="{{ lead.email }}" data-lead-phone="{{ lead.phone or lead.phone_e164 or '' }}" data-lead-product="{{ lead.product }}" data-lead-pain="{{ lead.pain_point }}" data-lead-timestamp="{{ lead.timestamp }}">View Details</div>
                                         <div class="dropdown-item update-stage-btn" data-lead-id="{{ loop.index }}">Update Sales Stage</div>
                                         <div class="dropdown-item add-note-btn" data-lead-id="{{ loop.index }}" data-lead-name="{{ lead.name }}">Add Note</div>
                                     </div>
@@ -105,6 +150,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
             {% else %}
             <div class="empty-state">
                 <h3>No Leads Yet</h3>
@@ -153,6 +199,7 @@
                     <div class="lead-info-value">
                         <strong>Name:</strong> <span id="detailName"></span><br>
                         <strong>Email:</strong> <span id="detailEmail"></span><br>
+                        <strong>Phone:</strong> <span id="detailPhone"></span><br>
                         <strong>Date Added:</strong> <span id="detailDate"></span>
                     </div>
                 </div>
@@ -284,10 +331,11 @@
                     const leadId = e.target.dataset.leadId;
                     const leadName = e.target.dataset.leadName;
                     const leadEmail = e.target.dataset.leadEmail;
+                    const leadPhone = e.target.dataset.leadPhone;
                     const leadProduct = e.target.dataset.leadProduct;
                     const leadPain = e.target.dataset.leadPain;
                     const leadTimestamp = e.target.dataset.leadTimestamp;
-                    viewLeadDetail(leadId, leadName, leadEmail, leadProduct, leadPain, leadTimestamp);
+                    viewLeadDetail(leadId, leadName, leadEmail, leadPhone, leadProduct, leadPain, leadTimestamp);
                 } else if (e.target.classList.contains('update-stage-btn')) {
                     e.preventDefault();
                     const leadId = e.target.dataset.leadId;
@@ -611,11 +659,12 @@ Your Sales Team`;
         }
 
         // Lead detail functions
-        function viewLeadDetail(leadId, leadName, leadEmail, leadProduct, leadPain, leadTimestamp) {
+        function viewLeadDetail(leadId, leadName, leadEmail, leadPhone, leadProduct, leadPain, leadTimestamp) {
             // Populate modal with lead data
             document.getElementById('detailLeadName').textContent = leadName;
             document.getElementById('detailName').textContent = leadName;
             document.getElementById('detailEmail').textContent = leadEmail;
+            document.getElementById('detailPhone').textContent = leadPhone || 'N/A';
             document.getElementById('detailProduct').textContent = leadProduct;
             document.getElementById('detailPain').textContent = leadPain;
             document.getElementById('detailDate').textContent = leadTimestamp ? leadTimestamp.substring(0, 10) : 'N/A';
